@@ -16,10 +16,12 @@ CORS(app)
 def get_db_connection():
     try:
         conn = mysql.connector.connect(
-            host="127.0.0.1", 
-            user="root",
-            password="",
-            database="orbitx_db"
+            host="mysql-143c29e-maharshiv7.i.aivencloud.com",                    # Paste your Host here
+            port=17981,                      # Paste your Port here (as an integer, no quotes)
+            user="avnadmin",                           
+            password="AVNS_tnqk4Z0AZgczhFrQhr4",       
+            database="defaultdb",                      # Use defaultdb for Aiven
+            ssl_disabled=False                         # Keep this False for Aiven
         )
         return conn
     except mysql.connector.Error as err:
