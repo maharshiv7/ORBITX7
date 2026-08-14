@@ -1,9 +1,9 @@
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime  
 from datetime import datetime, timedelta
 
 # 🟢 1. App Initialization (Sirf EK baar)
@@ -11,22 +11,57 @@ app = Flask(__name__)
 CORS(app)
 
 # ==========================================
-# 🔐 DATABASE CONNECTION (XAMPP MySQL)
+# 🔐 DATABASE CONNECTION (XAMPP / Cloud MySQL)
 # ==========================================
 def get_db_connection():
     try:
         conn = mysql.connector.connect(
-            host="mysql-143c29e-maharshiv7.i.aivencloud.com",                    # Paste your Host here
-            port=17981,                      # Paste your Port here (as an integer, no quotes)
-            user="avnadmin",                           
-            password="AVNS_tnqk4Z0AZgczhFrQhr4",       
-            database="defaultdb",                      # Use defaultdb for Aiven
-            ssl_disabled=False                         # Keep this False for Aiven
+            host=os.getenv("DB_HOST", "127.0.0.1"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER", "root"),
+            password=os.getenv("DB_PASSWORD", ""),
+            database=os.getenv("DB_NAME", "orbitx_db"),
+            ssl_disabled=False
         )
         return conn
     except mysql.connector.Error as err:
         print(f"❌ DB Connection Failed: {err}")
         return None
+
+def init_db():
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(100) NOT NULL UNIQUE,
+                    email VARCHAR(150) NOT NULL UNIQUE,
+                    password_hash VARCHAR(255) NOT NULL,
+                    q1_constellation VARCHAR(100) NOT NULL,
+                    q2_mission VARCHAR(100) NOT NULL,
+                    q3_nebula VARCHAR(100) NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            """)
+            conn.commit()
+            
+            for col in ['q1_constellation', 'q2_mission', 'q3_nebula']:
+                try:
+                    cursor.execute(f"ALTER TABLE users ADD COLUMN {col} VARCHAR(100) NOT NULL DEFAULT '';")
+                    conn.commit()
+                except Exception:
+                    pass
+                    
+            cursor.close()
+            print("[SUCCESS] Database table 'users' initialized & updated successfully!")
+        except Exception as e:
+            print(f"❌ DB Table Init Error: {e}")
+        finally:
+            conn.close()
+
+init_db()
 
 # ==========================================
 # 🌌 EXOPLANET DATABASE ENGINE
