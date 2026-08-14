@@ -291,7 +291,7 @@
             loadingStr.style.display = "block";
 
             // Python Backend ko REST API call marna
-            fetch(`http://127.0.0.1:5000/api/exoplanets?max_dist=${maxDist}&max_size=${maxSize}`)
+            fetch(`https://orbitx7.onrender.com/api/exoplanets?max_dist=${maxDist}&max_size=${maxSize}`)
                 .then(response => response.json())
                 .then(data => {
                     loadingStr.style.display = "none";

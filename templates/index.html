@@ -310,7 +310,7 @@
                 payload = { email, new_password: newPassword, q1, q2, q3 };
             }
 
-            fetch('http://127.0.0.1:5000' + endpoint, {
+            fetch('https://orbitx7.onrender.com' + endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)

@@ -107,7 +107,7 @@
 
         // 3. The Live Fetch Engine
         function updateISSPosition() {
-            fetch('http://127.0.0.1:5000/api/iss-location') 
+            fetch('https://orbitx7.onrender.com/api/iss-location') 
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === "success") {
@@ -149,7 +149,7 @@
             const unixTime = Math.floor(new Date(timeInput).getTime() / 1000);
 
             // Apne Python Backend se prediction mangna
-            fetch(`http://127.0.0.1:5000/api/iss-predict?timestamp=${unixTime}`)
+            fetch(`https://orbitx7.onrender.com/api/iss-predict?timestamp=${unixTime}`)
                 .then(response => response.json())
                 .then(data => {
                     if(data.status === "success") {

@@ -175,7 +175,7 @@
         function fetchBookmarks(username) {
             const grid = document.getElementById('universe-grid');
 
-            fetch('http://127.0.0.1:5000/api/my_bookmarks', {
+            fetch('https://orbitx7.onrender.com/api/my_bookmarks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: username })
